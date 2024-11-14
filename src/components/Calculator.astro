@@ -193,22 +193,91 @@ import DrinkEntry from './DrinkEntry.astro';
   });
 
   function calculateBAC() {
-    // Collect all drink entries and calculate total alcohol content
+    const form = document.getElementById('bacForm') as HTMLFormElement;
+    const gender = (form.querySelector('[name="gender"]') as HTMLSelectElement).value;
+    const weight = parseFloat((form.querySelector('[name="weight"]') as HTMLInputElement).value);
+    const weightUnit = (form.querySelector('[name="weightUnit"]') as HTMLSelectElement).value;
+
+    // Convert weight to pounds if needed
+    const weightInPounds = weightUnit === 'kg' ? weight * 2.20462 : weight;
+
+    // Gender constant (Widmark factor)
+    const r = gender === 'male' ? 0.68 : 0.55;
+
+    // Get all drink entries
     const drinks = document.querySelectorAll('.drink-entry');
-    let totalAlcohol = 0;
-    
+    let totalAlcoholGrams = 0;
+    let earliestTime: Date | null = null;
+
     drinks.forEach((drink) => {
-      // Implementation of the Widmark formula for each drink
-      // BAC = (A × 5.14 / W × r) - .015 × H
-      // A = alcohol consumed in ounces
-      // W = weight in pounds
-      // r = gender constant (.73 for men, .66 for women)
-      // H = hours since first drink
+      const drinkId = drink.querySelector('.remove-drink')?.getAttribute('data-id');
+      if (!drinkId) return;
+
+      const type = (drink.querySelector(`[name="drinkType-${drinkId}"]`) as HTMLSelectElement).value;
+      const size = parseFloat((drink.querySelector(`[name="drinkSize-${drinkId}"]`) as HTMLInputElement).value);
+      const unit = (drink.querySelector(`[name="sizeUnit-${drinkId}"]`) as HTMLSelectElement).value;
+      const alcoholContent = parseFloat((drink.querySelector(`[name="alcoholContent-${drinkId}"]`) as HTMLInputElement).value) / 100;
+      const timeStr = (drink.querySelector(`[name="timeConsumed-${drinkId}"]`) as HTMLInputElement).value;
+
+      if (!size || !alcoholContent || !timeStr) return;
+
+      // Convert drink size to milliliters if needed
+      const sizeInMl = unit === 'oz' ? size * 29.5735 : size;
+
+      // Calculate pure alcohol in grams
+      // Density of alcohol is 0.789 g/ml
+      const alcoholGrams = sizeInMl * alcoholContent * 0.789;
+      totalAlcoholGrams += alcoholGrams;
+
+      // Track earliest drink time
+      const [hours, minutes] = timeStr.split(':');
+      const drinkTime = new Date();
+      drinkTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+      
+      if (!earliestTime || drinkTime < earliestTime) {
+        earliestTime = drinkTime;
+      }
     });
 
-    // Update results display
-    document.getElementById('currentBac')!.textContent = '0.08%'; // Example value
-    document.getElementById('timeToZero')!.textContent = '5.3 hours';
-    document.getElementById('currentEffects')!.textContent = 'Impaired judgment and self-control';
+    if (!earliestTime) return;
+
+    // Calculate hours since first drink
+    const now = new Date();
+    const hoursSinceFirstDrink = (now.getTime() - earliestTime.getTime()) / (1000 * 60 * 60);
+
+    // Calculate BAC using the Widmark formula
+    // BAC = (alcohol in grams * 100) / (body weight in grams * r) - (elimination rate * hours)
+    const eliminationRate = 0.015; // Standard alcohol elimination rate per hour
+    const bac = (totalAlcoholGrams * 100) / (weightInPounds * 453.592 * r) - (eliminationRate * hoursSinceFirstDrink);
+
+    // Ensure BAC is not negative
+    const finalBAC = Math.max(0, bac);
+
+    // Update display
+    document.getElementById('currentBac')!.textContent = `${finalBAC.toFixed(3)}%`;
+
+    // Calculate time until BAC reaches 0
+    const hoursToZero = finalBAC / eliminationRate;
+    document.getElementById('timeToZero')!.textContent = `${hoursToZero.toFixed(1)} hours`;
+
+    // Determine effects based on BAC level
+    let effects = '';
+    if (finalBAC >= 0.3) {
+      effects = 'Severe impairment, possible loss of consciousness';
+    } else if (finalBAC >= 0.2) {
+      effects = 'Disorientation, severe motor impairment, blackout likely';
+    } else if (finalBAC >= 0.15) {
+      effects = 'Major impairment of mental and physical control';
+    } else if (finalBAC >= 0.08) {
+      effects = 'Legally intoxicated, significant impairment of judgment and coordination';
+    } else if (finalBAC >= 0.05) {
+      effects = 'Reduced inhibitions, some impairment of judgment';
+    } else if (finalBAC >= 0.02) {
+      effects = 'Mild mood changes, slight relaxation';
+    } else {
+      effects = 'Minimal effects';
+    }
+
+    document.getElementById('currentEffects')!.textContent = effects;
   }
 </script>

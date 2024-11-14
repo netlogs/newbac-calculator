@@ -4,27 +4,31 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+// 添加canonical URL
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately. Get instant results and understand the effects of alcohol on your body." />
+		<meta name="description" content="Most Accurate Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately. Get instant results." />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		
 		<!-- SEO Meta Tags -->
-		<meta name="keywords" content="BAC calculator, blood alcohol content, alcohol calculator, BAC estimation, blood alcohol level, alcohol consumption calculator" />
+		<meta name="keywords" content="BAC calculator, blood alcohol content, alcohol calculator" />
 		<meta name="author" content="Cepistle" />
 		
 		<!-- Open Graph / Social Media Meta Tags -->
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately." />
-		<meta property="og:url" content="https://bac-calculator.com" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:site_name" content="BAC Calculator" />
 		
 		<!-- Schema.org Markup -->
 		<script type="application/ld+json">
@@ -33,7 +37,7 @@ const { title } = Astro.props;
 				"@type": "WebApplication",
 				"name": "BAC Calculator",
 				"description": "Professional Blood Alcohol Content (BAC) Calculator for accurate estimation of blood alcohol levels.",
-				"url": "https://bac-calculator.com",
+				"url": "${canonicalURL}",
 				"applicationCategory": "HealthApplication",
 				"creator": {
 					"@type": "Organization",
@@ -43,9 +47,20 @@ const { title } = Astro.props;
 				"offers": {
 					"@type": "Offer",
 					"price": "0"
-				}
+				},
+				"dateModified": "${new Date().toISOString()}",
+				"inLanguage": "en",
+				"isFamilyFriendly": true
 			}
 		</script>
+		
+		<!-- 添加canonical链接 -->
+		<link rel="canonical" href={canonicalURL} />
+		
+		<!-- 添加Twitter卡片 -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately." />
 	</head>
 	<body class="min-h-screen bg-white">
 		<slot />
