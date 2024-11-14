@@ -13,23 +13,32 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <html lang="en" class="scroll-smooth">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Most Accurate Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately. Get instant results." />
+		<meta
+			name="description"
+			content="Most Accurate Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately. Get instant results."
+		/>
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-		
+
 		<!-- SEO Meta Tags -->
-		<meta name="keywords" content="BAC calculator, blood alcohol content, alcohol calculator" />
+		<meta
+			name="keywords"
+			content="BAC calculator, blood alcohol content, alcohol calculator"
+		/>
 		<meta name="author" content="Cepistle" />
-		
+
 		<!-- Open Graph / Social Media Meta Tags -->
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={title} />
-		<meta property="og:description" content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately." />
+		<meta
+			property="og:description"
+			content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately."
+		/>
 		<meta property="og:url" content={canonicalURL} />
 		<meta property="og:site_name" content="BAC Calculator" />
-		
+
 		<!-- Schema.org Markup -->
 		<script type="application/ld+json">
 			{
@@ -53,16 +62,36 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 				"isFamilyFriendly": true
 			}
 		</script>
-		
+
 		<!-- 添加canonical链接 -->
 		<link rel="canonical" href={canonicalURL} />
-		
+
 		<!-- 添加Twitter卡片 -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately." />
+		<meta
+			name="twitter:description"
+			content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately."
+		/>
 	</head>
 	<body class="min-h-screen bg-white">
 		<slot />
+		<div style="display: none;">
+			<!-- add google tag code here -->
+			<!-- Google tag (gtag.js) -->
+			<script
+				async
+				src="https://www.googletagmanager.com/gtag/js?id=G-9F41MPVN4S"
+			></script>
+			<script>
+				window.dataLayer = window.dataLayer || [];
+				function gtag() {
+					dataLayer.push(arguments);
+				}
+				gtag("js", new Date());
+
+				gtag("config", "G-9F41MPVN4S");
+			</script>
+		</div>
 	</body>
 </html>
