@@ -1,0 +1,78 @@
+---
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<div class="drink-entry bg-gray-50 p-4 rounded-lg mb-4">
+  <div class="flex justify-between items-center mb-4">
+    <h4 class="text-lg font-medium text-gray-900">Drink #{id}</h4>
+    <button type="button" class="remove-drink text-red-600 hover:text-red-800 text-sm" data-id={id}>
+      Remove
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Drink Type -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Drink Type</label>
+      <select 
+        name={`drinkType-${id}`}
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+      >
+        <option value="beer">Beer</option>
+        <option value="wine">Wine</option>
+        <option value="liquor">Liquor</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <!-- Drink Size -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Drink Size</label>
+      <div class="flex space-x-2">
+        <input 
+          type="number" 
+          name={`drinkSize-${id}`}
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
+          placeholder="Size"
+          min="0"
+          step="0.1"
+        >
+        <select 
+          name={`sizeUnit-${id}`}
+          class="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+        >
+          <option value="oz">oz</option>
+          <option value="ml">ml</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Alcohol Content -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Alcohol Content (%)</label>
+      <input 
+        type="number" 
+        name={`alcoholContent-${id}`}
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
+        placeholder="e.g., 5"
+        min="0"
+        max="100"
+        step="0.1"
+      >
+    </div>
+
+    <!-- Time Consumed -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Time Consumed</label>
+      <input 
+        type="time" 
+        name={`timeConsumed-${id}`}
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+      >
+    </div>
+  </div>
+</div>

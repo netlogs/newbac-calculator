@@ -1,0 +1,214 @@
+---
+import DrinkEntry from './DrinkEntry.astro';
+---
+
+<div class="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+  <h2 class="text-3xl font-bold text-gray-900 mb-8">BAC Calculator</h2>
+  
+  <form id="bacForm" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Gender Selection -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Gender</label>
+        <select 
+          name="gender" 
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          required
+        >
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+      <!-- Weight Input -->
+      <div class="flex space-x-4">
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700">Weight</label>
+          <input 
+            type="number" 
+            name="weight"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
+            placeholder="Enter weight"
+            required
+            min="0"
+          >
+        </div>
+        <div class="w-24">
+          <label class="block text-sm font-medium text-gray-700">Unit</label>
+          <select 
+            name="weightUnit"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          >
+            <option value="lbs">lbs</option>
+            <option value="kg">kg</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drinks Section -->
+    <div class="mt-8">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-900">Drinks Consumed</h3>
+        <button 
+          type="button" 
+          id="addDrink"
+          class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm"
+        >
+          Add Drink
+        </button>
+      </div>
+
+      <div id="drinksList" class="space-y-4">
+        <DrinkEntry id="1" />
+      </div>
+    </div>
+
+    <button 
+      type="submit" 
+      class="w-full bg-primary-600 text-white rounded-lg px-4 py-3 hover:bg-primary-700 transition-colors"
+    >
+      Calculate BAC
+    </button>
+  </form>
+
+  <div id="results" class="mt-8 hidden">
+    <div class="border-t pt-6 space-y-4">
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900">Current BAC</h3>
+        <p id="currentBac" class="text-3xl font-bold text-primary-600">0.00%</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900">Time to 0.00%</h3>
+          <p id="timeToZero" class="text-xl font-medium text-gray-700">0 hours</p>
+        </div>
+        
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900">Current Effects</h3>
+          <p id="currentEffects" class="text-gray-700"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let drinkCounter = 1;
+
+  // Add new drink entry
+  document.getElementById('addDrink')?.addEventListener('click', () => {
+    drinkCounter++;
+    const drinksList = document.getElementById('drinksList');
+    const newDrink = document.createElement('div');
+    newDrink.innerHTML = `
+      <div class="drink-entry bg-gray-50 p-4 rounded-lg mb-4">
+        <div class="flex justify-between items-center mb-4">
+          <h4 class="text-lg font-medium text-gray-900">Drink #${drinkCounter}</h4>
+          <button type="button" class="remove-drink text-red-600 hover:text-red-800 text-sm" data-id="${drinkCounter}">
+            Remove
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Drink Type</label>
+            <select 
+              name="drinkType-${drinkCounter}"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+            >
+              <option value="beer">Beer</option>
+              <option value="wine">Wine</option>
+              <option value="liquor">Liquor</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Drink Size</label>
+            <div class="flex space-x-2">
+              <input 
+                type="number" 
+                name="drinkSize-${drinkCounter}"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
+                placeholder="Size"
+                min="0"
+                step="0.1"
+              >
+              <select 
+                name="sizeUnit-${drinkCounter}"
+                class="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              >
+                <option value="oz">oz</option>
+                <option value="ml">ml</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Alcohol Content (%)</label>
+            <input 
+              type="number" 
+              name="alcoholContent-${drinkCounter}"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
+              placeholder="e.g., 5"
+              min="0"
+              max="100"
+              step="0.1"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Time Consumed</label>
+            <input 
+              type="time" 
+              name="timeConsumed-${drinkCounter}"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+            >
+          </div>
+        </div>
+      </div>
+    `;
+    drinksList?.appendChild(newDrink);
+  });
+
+  // Remove drink entry
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('remove-drink')) {
+      const drinkEntry = target.closest('.drink-entry');
+      drinkEntry?.remove();
+    }
+  });
+
+  // Form submission and BAC calculation
+  document.getElementById('bacForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const results = document.getElementById('results');
+    results?.classList.remove('hidden');
+    
+    // TODO: Implement BAC calculation logic here
+    calculateBAC();
+  });
+
+  function calculateBAC() {
+    // Collect all drink entries and calculate total alcohol content
+    const drinks = document.querySelectorAll('.drink-entry');
+    let totalAlcohol = 0;
+    
+    drinks.forEach((drink) => {
+      // Implementation of the Widmark formula for each drink
+      // BAC = (A × 5.14 / W × r) - .015 × H
+      // A = alcohol consumed in ounces
+      // W = weight in pounds
+      // r = gender constant (.73 for men, .66 for women)
+      // H = hours since first drink
+    });
+
+    // Update results display
+    document.getElementById('currentBac')!.textContent = '0.08%'; // Example value
+    document.getElementById('timeToZero')!.textContent = '5.3 hours';
+    document.getElementById('currentEffects')!.textContent = 'Impaired judgment and self-control';
+  }
+</script>

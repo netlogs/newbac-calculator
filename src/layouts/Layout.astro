@@ -1,0 +1,53 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately. Get instant results and understand the effects of alcohol on your body." />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		
+		<!-- SEO Meta Tags -->
+		<meta name="keywords" content="BAC calculator, blood alcohol content, alcohol calculator, BAC estimation, blood alcohol level, alcohol consumption calculator" />
+		<meta name="author" content="Cepistle" />
+		
+		<!-- Open Graph / Social Media Meta Tags -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content="Professional Blood Alcohol Content (BAC) Calculator - Calculate your estimated blood alcohol level accurately." />
+		<meta property="og:url" content="https://bac-calculator.com" />
+		
+		<!-- Schema.org Markup -->
+		<script type="application/ld+json">
+			{
+				"@context": "http://schema.org",
+				"@type": "WebApplication",
+				"name": "BAC Calculator",
+				"description": "Professional Blood Alcohol Content (BAC) Calculator for accurate estimation of blood alcohol levels.",
+				"url": "https://bac-calculator.com",
+				"applicationCategory": "HealthApplication",
+				"creator": {
+					"@type": "Organization",
+					"name": "Cepistle",
+					"email": "colorepistle@gmail.com"
+				},
+				"offers": {
+					"@type": "Offer",
+					"price": "0"
+				}
+			}
+		</script>
+	</head>
+	<body class="min-h-screen bg-white">
+		<slot />
+	</body>
+</html>
