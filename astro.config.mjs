@@ -7,4 +7,7 @@ export default defineConfig({
   integrations: [tailwind(), sitemap()],
   site: 'https://baccalculator.app',
   trailingSlash: 'never',
+  adapter: cloudflare({
+    mode: 'directory',
+  }),
 });
