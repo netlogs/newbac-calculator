@@ -2,7 +2,7 @@
 title: "How to Calculate BAC"
 draft: false
 snippet: "Learn how to calculate your blood alcohol content accurately using scientific methods."
-publishDate: "2024-03-20"
+publishDate: "2024-11-28"
 tags: ["BAC", "Alcohol", "Education"]
 author: "Cepistle"
 excerpt: "Learn how to calculate your blood alcohol content accurately using scientific methods."
