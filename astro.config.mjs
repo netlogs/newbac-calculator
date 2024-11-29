@@ -13,6 +13,7 @@ export default defineConfig({
       },
       customPages: [
         'https://baccalculator.app/blog/how-to-calculate-bac',
+        'https://baccalculator.app/blog/how-long-alcohol-stays-in-your-body',
       ],
       changefreq: 'weekly',
       priority: 0.7,
